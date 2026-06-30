@@ -96,7 +96,7 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 12px;
         }
 
         .header-right {
@@ -951,9 +951,9 @@
 
         /* Global Rules Section */
         .global-rules-section {
-            background: linear-gradient(135deg, var(--accent-light) 0%, var(--bg-elevated) 100%);
-            border: 2px solid var(--accent-primary);
-            border-radius: 12px;
+            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+            border: 2px solid #93c5fd;
+            border-radius: 16px;
             padding: 32px;
             margin-bottom: 40px;
             box-shadow: var(--shadow-lg);
@@ -972,16 +972,24 @@
         }
 
         .global-rules-icon {
-            color: white;
+            color: var(--accent-primary);
             width: 28px;
             height: 28px;
+        }
+
+        [data-theme="dark"] .global-rules-icon {
+            color: white;
         }
 
         .global-rules-section h3 {
             font-size: 22px;
             font-weight: 700;
-            color: white;
+            color: #1e40af;
             margin: 0;
+        }
+
+        [data-theme="dark"] .global-rules-section h3 {
+            color: white;
         }
 
         .global-rules-grid {
@@ -1060,12 +1068,12 @@
             display: flex;
             gap: 20px;
             align-items: flex-start;
-            background: var(--bg-elevated);
-            border: 2px solid var(--accent-primary);
+            background: white;
+            border: 2px solid #3b82f6;
             border-radius: 12px;
             padding: 24px 28px;
             margin-bottom: 32px;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.12), 0 2px 8px rgba(59, 130, 246, 0.08);
         }
 
         [data-theme="dark"] .primary-rule-callout {
@@ -1081,7 +1089,7 @@
         .callout-title {
             font-size: 18px;
             font-weight: 700;
-            color: white;
+            color: var(--text-primary);
             margin-bottom: 16px;
         }
 
@@ -1092,7 +1100,7 @@
         .callout-text {
             font-size: 15px;
             line-height: 1.7;
-            color: rgba(255, 255, 255, 0.95);
+            color: var(--text-primary);
         }
 
         [data-theme="dark"] .callout-text {
@@ -1105,16 +1113,20 @@
             gap: 6px;
             margin-bottom: 20px;
             padding: 3px;
-            background: rgba(0, 0, 0, 0.2);
+            background: var(--bg-tertiary);
             border-radius: 8px;
             width: fit-content;
+        }
+
+        [data-theme="dark"] .form-factor-pills {
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .form-factor-pill {
             padding: 8px 20px;
             font-size: 13px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-secondary);
             background: transparent;
             border: none;
             border-radius: 6px;
@@ -1122,15 +1134,30 @@
             transition: all 0.2s;
         }
 
+        [data-theme="dark"] .form-factor-pill {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
         .form-factor-pill:hover {
+            color: var(--text-primary);
+            background: var(--bg-elevated);
+        }
+
+        [data-theme="dark"] .form-factor-pill:hover {
             color: rgba(255, 255, 255, 0.85);
             background: rgba(255, 255, 255, 0.08);
         }
 
         .form-factor-pill.active {
+            color: var(--text-primary);
+            background: var(--bg-elevated);
+            box-shadow: var(--shadow-sm);
+            font-weight: 700;
+        }
+
+        [data-theme="dark"] .form-factor-pill.active {
             color: white;
             background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         [data-theme="dark"] .form-factor-pill.active {
@@ -1148,8 +1175,12 @@
         }
 
         .callout-text strong {
-            color: white;
+            color: var(--accent-primary);
             font-weight: 700;
+        }
+
+        [data-theme="dark"] .callout-text strong {
+            color: white;
         }
 
         [data-theme="dark"] .callout-text strong {
