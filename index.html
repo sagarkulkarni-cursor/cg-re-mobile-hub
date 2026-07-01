@@ -3317,6 +3317,34 @@
             });
         }
 
+        // APF Form factor switching
+        const apfFormFactorPills = document.querySelectorAll('[data-factor]');
+        let currentFormFactor = 'tablet-landscape'; // Default selection
+
+        function switchAPFFormFactor(selectedFactor) {
+            currentFormFactor = selectedFactor;
+
+            // Update active pill
+            apfFormFactorPills.forEach(pill => {
+                pill.classList.toggle('active', pill.dataset.factor === selectedFactor);
+            });
+
+            // In a full implementation, this would:
+            // - Filter/update table data based on form factor
+            // - Show/hide form-factor-specific columns
+            // - Update scoring rules display
+            console.log('APF Form Factor switched to:', selectedFactor);
+        }
+
+        apfFormFactorPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                switchAPFFormFactor(pill.dataset.factor);
+            });
+        });
+
+        // Initialize APF with tablet-landscape selected (default)
+        switchAPFFormFactor('tablet-landscape');
+
         // Add Action button functionality
         const addActionButton = document.querySelector('.apf-content .btn-primary');
         if (addActionButton) {
