@@ -1371,6 +1371,195 @@
                 border-bottom: 1px solid var(--border-primary);
             }
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-dialog {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-form-group {
+            margin-bottom: 20px;
+        }
+
+        .modal-form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .modal-label-hint {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-tertiary);
+            text-transform: none;
+            letter-spacing: 0;
+            margin-left: 6px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            background: var(--bg-elevated);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        .modal-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .modal-score-input {
+            width: 80px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .modal-footer {
+            padding: 20px 28px;
+            border-top: 1px solid var(--border-primary);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .modal-btn-cancel {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-primary);
+        }
+
+        .modal-btn-cancel:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .modal-btn-submit {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .modal-btn-submit:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+        }
+
+        .modal-btn-submit:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -2878,7 +3067,7 @@
                                 <button class="form-factor-pill" data-factor="tablet-portrait">Tablet Portrait (iPad 11", 13", Mini)</button>
                                 <button class="form-factor-pill" data-factor="phone">Phone (16 Pro, 17 Pro Max, SE)</button>
                             </div>
-                            <button class="btn-primary" onclick="alert('Add Action functionality coming soon!')">
+                            <button class="btn-primary" id="addActionBtn">
                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 </svg>
@@ -3345,12 +3534,26 @@
         // Initialize APF with tablet-landscape selected (default)
         switchAPFFormFactor('tablet-landscape');
 
-        // Add Action button functionality
-        const addActionButton = document.querySelector('.apf-content .btn-primary');
-        if (addActionButton) {
-            addActionButton.addEventListener('click', function() {
-                const actionName = prompt('Enter action name:');
-                if (actionName && actionName.trim()) {
+        // Modal functions
+        function openAddActionModal() {
+            document.getElementById('addActionModal').classList.add('active');
+            document.getElementById('actionNameInput').focus();
+        }
+
+        function closeAddActionModal() {
+            document.getElementById('addActionModal').classList.remove('active');
+            document.getElementById('addActionForm').reset();
+        }
+
+        function submitAddAction() {
+            const actionName = document.getElementById('actionNameInput').value.trim();
+            const importance = parseInt(document.getElementById('importanceInput').value);
+            const context = parseInt(document.getElementById('contextInput').value);
+            const frequency = parseInt(document.getElementById('frequencyInput').value);
+            const reversibility = parseInt(document.getElementById('reversibilityInput').value);
+            const formFactor = parseInt(document.getElementById('formFactorInput').value);
+
+            if (actionName) {
                     const tableBody = document.getElementById('actionTableBody');
                     const newRowId = tableBody.children.length + 1;
 
@@ -3364,38 +3567,51 @@
                     nameCell.textContent = actionName.trim();
                     newRow.appendChild(nameCell);
 
-                    // Create score cells
+                    // Create score cells with actual values from modal
+                    const scoreValues = {
+                        'importance': importance,
+                        'context': context,
+                        'frequency': frequency,
+                        'reversibility': reversibility,
+                        'formFactor': formFactor
+                    };
+
                     const scoreColumns = ['importance', 'context', 'frequency', 'reversibility', 'formFactor'];
                     scoreColumns.forEach(col => {
                         const scoreCell = document.createElement('td');
                         scoreCell.contentEditable = 'true';
                         scoreCell.className = 'editable-cell score-cell';
                         scoreCell.setAttribute('data-col', col);
-                        scoreCell.textContent = '3';
+                        scoreCell.textContent = scoreValues[col];
                         newRow.appendChild(scoreCell);
                     });
+
+                    // Calculate total
+                    const total = importance + context + frequency + reversibility + formFactor;
 
                     // Total cell
                     const totalCell = document.createElement('td');
                     totalCell.className = 'total-cell';
-                    totalCell.textContent = '15';
+                    totalCell.textContent = total;
                     newRow.appendChild(totalCell);
 
-                    // Type cell
+                    // Calculate action type based on total
+                    const actionType = calculateActionType(total);
                     const typeCell = document.createElement('td');
                     typeCell.className = 'type-cell';
                     const typeBadge = document.createElement('span');
-                    typeBadge.className = 'badge-secondary';
-                    typeBadge.textContent = 'SECONDARY';
+                    typeBadge.className = actionType.badge;
+                    typeBadge.textContent = actionType.text;
                     typeCell.appendChild(typeBadge);
                     newRow.appendChild(typeCell);
 
-                    // Visibility cell
+                    // Calculate visibility based on total
+                    const visibility = calculateVisibility(total);
                     const visibilityCell = document.createElement('td');
                     visibilityCell.className = 'visibility-cell';
                     const visibilityBadge = document.createElement('span');
-                    visibilityBadge.className = 'visibility-badge visible';
-                    visibilityBadge.textContent = 'Visible';
+                    visibilityBadge.className = `visibility-badge ${visibility.badge}`;
+                    visibilityBadge.textContent = visibility.text;
                     visibilityCell.appendChild(visibilityBadge);
                     newRow.appendChild(visibilityCell);
 
@@ -3441,9 +3657,34 @@
                         const currentCount = parseInt(metaSpan.textContent);
                         metaSpan.textContent = `${currentCount + 1} actions`;
                     }
+
+                    // Close modal
+                    closeAddActionModal();
                 }
-            });
+            }
+
+        // Add Action button functionality
+        const addActionButton = document.querySelector('.apf-content .btn-primary');
+        if (addActionButton) {
+            // Remove old onclick and add new one that opens modal
+            addActionButton.removeAttribute('onclick');
+            addActionButton.addEventListener('click', openAddActionModal);
         }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAddActionModal();
+            }
+        });
+
+        // Close modal on overlay click
+        document.getElementById('addActionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddActionModal();
+            }
+        });
+    }
 
         // Collapse/Expand Left Sidebar for APF
         const collapseRailApf = document.getElementById('collapseRailApf');
@@ -3482,5 +3723,71 @@
             });
         }
     </script>
+
+    <!-- Add Action Modal -->
+    <div class="modal-overlay" id="addActionModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Action</h3>
+                <button class="modal-close" onclick="closeAddActionModal()">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                        <path d="M15 5L5 15M5 5l10 10" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addActionForm">
+                    <div class="modal-form-group">
+                        <label class="modal-label">Action Name</label>
+                        <input type="text" class="modal-input" id="actionNameInput" placeholder="e.g., Start Visit, View Details" required>
+                    </div>
+
+                    <div class="modal-form-group">
+                        <label class="modal-label">
+                            Importance
+                            <span class="modal-label-hint">(1-5)</span>
+                        </label>
+                        <input type="number" class="modal-input modal-score-input" id="importanceInput" min="1" max="5" value="3" required>
+                    </div>
+
+                    <div class="modal-form-group">
+                        <label class="modal-label">
+                            Context / State
+                            <span class="modal-label-hint">(1-5)</span>
+                        </label>
+                        <input type="number" class="modal-input modal-score-input" id="contextInput" min="1" max="5" value="3" required>
+                    </div>
+
+                    <div class="modal-form-group">
+                        <label class="modal-label">
+                            Frequency
+                            <span class="modal-label-hint">(1-5)</span>
+                        </label>
+                        <input type="number" class="modal-input modal-score-input" id="frequencyInput" min="1" max="5" value="3" required>
+                    </div>
+
+                    <div class="modal-form-group">
+                        <label class="modal-label">
+                            Reversibility
+                            <span class="modal-label-hint">(1-5)</span>
+                        </label>
+                        <input type="number" class="modal-input modal-score-input" id="reversibilityInput" min="1" max="5" value="3" required>
+                    </div>
+
+                    <div class="modal-form-group">
+                        <label class="modal-label">
+                            Form Factor Fit
+                            <span class="modal-label-hint">(1-5)</span>
+                        </label>
+                        <input type="number" class="modal-input modal-score-input" id="formFactorInput" min="1" max="5" value="3" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="closeAddActionModal()">Cancel</button>
+                <button class="modal-btn modal-btn-submit" onclick="submitAddAction()">Add Action</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
